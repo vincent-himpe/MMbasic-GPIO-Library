@@ -1,5 +1,5 @@
-# MMBasic GPIO Library
-## A MMBasic that enables low-level GPIO control
+# PicoMite MMBasic GPIO Library
+## An MMBasic Library that enables low-level GPIO control on RP2040 / RP2350 PicoMites
 
 ### Overview
 MMBasic has built in functions to control the GPIO pins and those perform perfectly fine.
@@ -65,7 +65,7 @@ Counterpart of GPIO.Tristate. Re-enables the driver.
 - GPIO : integer 0 to 29 or more (depending on CPU)
 - State : 1 or 0 where 1 = Isolated, 0 = Connected  
 >[!WARNING]
->ONLY on RP2350. Attempting this on RP204 will throw and error  
+>ONLY on RP2350. Attempting this on RP2040 will throw an error  
 
 Puts the PAD in isolation mode. This is a feature of the 2350. It allows disconnecting the internal peripherals from the PAD cell without needing to reconfigure them upon reconnection.
 
