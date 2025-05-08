@@ -186,13 +186,13 @@ SUB GPIO.NoPull(GPIO AS INTEGER)
   IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Pulls disabled"
 END SUB
   
-  ' Turns on Bus-Keep mode 
+  ' Turns on Bus-Keep mode
   ' This only works if the output driver is disabled and the port is an input
 SUB GPIO.BusKeep(GPIO AS INTEGER)
-    LOCAL x  AS INTEGER = GPIO.Get(GPIO)
-    x = x OR  &b00001100
-    GPIO.Set GPIO,x
-    IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " BusKeep Enabled"
+  LOCAL x  AS INTEGER = GPIO.Get(GPIO)
+  x = x OR  &b00001100
+  GPIO.Set GPIO,x
+  IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " BusKeep Enabled"
 END SUB
   
   ' Set the driver slewrate to Fast
@@ -211,6 +211,41 @@ SUB GPIO.SlewSlow(GPIO AS INTEGER)
   GPIO.Set GPIO,x
   IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Slewrate SLOW"
 END SUB
+  
+' Open-Drain, Open-Source mode control
+  
+  ' Switch a pin to Open-x state (tristated)
+Sub GPIO.Float (GPIO as INTEGER)
+  GPIO.OEClear(1<<pin)
+end sub
+  
+  ' Switch a pin into driven state
+sub GPIO.Drive (GPIO as INTEGER)
+  GPIO.OESet(1<<pin)
+end sub
+  
+Sub GPIO.OpenMode (GPIO as INTEGER,State as INTEGER)
+  select case State
+    case else
+    case 0  ' open collector/source , no pull-up
+      GPIO.OEClear(1<<pin)   ' disable driver
+      GPIO.NoPull(pin)       ' resistors off
+      GPIO.PClear(1 <<pin)   ' set driver to 0
+    case 1  ' open collector/source , no pull-up
+      GPIO.OEClear(1<<pin)   ' disable driver
+      GPIO.Pullup (pin)      ' resistor in pull-up
+      GPIO.PClear(1 <<pin)   ' set driver to 0
+    case 2  ' open Emitter/Drain, no pull-down
+      GPIO.OEClear(1<<pin)   ' disable driver
+      GPIO.NoPull(pin)       ' resistors off
+      GPIO.PSet(1 <<pin)     ' set driver to 1
+    case 3  ' open Emitter/Drain, pull-down
+      GPIO.OEClear(1<<pin)   ' disable driver
+      GPIO.PullDown(pin)     ' resistors in pulldown
+      GPIO.PClear(1 <<pin)     ' set driver to 0
+      error "GPIO : Invalid Mode state"
+  end select
+end sub
   
   ' -----------------------------------------------------------------
   ' Parallel I/O access. These functions are Atomic and synchronous
@@ -236,14 +271,14 @@ Sub GPIO.Pwrite (State as INTEGER)
   local Safestate as INTEGER = State and &h03FFFFFFF
   poke word x,Safestate
 end sub
-    
+  
   ' Retrieve the current state of the output drivers
 Function GPIO.Pstate() as INTEGER
   local x = peek (word __GPIO_SIO_BASE+ &h010)
   if __GPIO_Verbose <>0 then print "GPIO  : Pstate ";bin$(x,32)
   GPIO.Pstate = x
 end function
-
+  
   ' Shadow sub for Pstate so you can invoke without requiring the return value
   ' only useful when verbose is on
 Sub GPIO.Pstate.
