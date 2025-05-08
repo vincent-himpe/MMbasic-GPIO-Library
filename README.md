@@ -1,5 +1,5 @@
-# MMBasic GPIO Library
-## A MMBasic that enables low-level GPIO control
+# PicoMite MMBasic GPIO Library
+## An MMBasic Library that enables low-level GPIO control on RP2040 / RP2350 PicoMites
 
 ### Overview
 MMBasic has built in functions to control the GPIO pins and those perform perfectly fine.
