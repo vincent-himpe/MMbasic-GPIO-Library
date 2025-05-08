@@ -250,7 +250,7 @@ end sub
   ' -----------------------------------------------------------------
   ' Parallel I/O access. These functions are Atomic and synchronous
   ' -----------------------------------------------------------------
-  
+   
   ' Read all GPIO INPUT pins in one shot.
 Function GPIO.PRead() as INTEGER
   local x = peek (word __GPIO_SIO_BASE+ &h04)
