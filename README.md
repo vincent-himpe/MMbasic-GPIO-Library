@@ -29,7 +29,17 @@ GPIO.Verbose 0  ' Turn off verbose mode
 GPIO.Verbose 1  ' Turn on verbose mode  
 
 ---
-## PAD Functions.
+## PAD Functions.  
+
+The PAD in an RP2xxx is the final stage before a signal leaves the chip, or the first stage when it enters the chip. It connects the physical pin to the internal circuitry.
+The output driver takes the logic level, comging from the GPIO function multiplexer, and drives it onto the pin. The driver has programmable slew rate and drive strength as well as an Output enable.
+The input buffer can perform a Schmitt-trigger function
+A pull-up and Pull-down register can be enabled as well as a special mode called bus-keep.
+
+
+![IO-Pad diagram](/Images/IO-PAD.png)
+
+
 
 ### Sub GPIO.DriveStrength (GPIO,Strength)
 - GPIO : integer 0 to 29 or more (depending on CPU)
