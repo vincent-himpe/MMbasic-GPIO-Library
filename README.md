@@ -103,11 +103,11 @@ Sets the slewrate of the output driver to slow. This reduces ringing and oversho
 
 This is an advanced pin-state that allows open-collector/open-emitter type behavior with or without pull-up/pull-down. You need to use the GPIO.Float and GPIO.Drive functions to set the pin high/low.
 
-## Sub SPIO.Float(GPIO)  
+### Sub SPIO.Float(GPIO)  
 - GPIO : integer 0 to 29 or more (depending on CPU)
 Turns the pin driver OFF so it floats to its programmed OPEN mode (with or withour resistor)
 
-## Sub SPIO.Drive(GPIO)  
+### Sub SPIO.Drive(GPIO)  
 - GPIO : integer 0 to 29 or more (depending on CPU)
 Turns the pin driver ON so it goes to its programmed DRIVE mode ( HIGH in case of Open emitter/drain, LOW in case of open Collector/Source)
 
