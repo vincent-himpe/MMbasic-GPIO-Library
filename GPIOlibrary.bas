@@ -186,7 +186,7 @@ SUB GPIO.NoPull(GPIO AS INTEGER)
   IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Pulls disabled"
 END SUB
   
-  ' Turns on Bus-Keep mode
+  ' Turns on Bus-Keep mode 
   ' This only works if the output driver is disabled and the port is an input
 SUB GPIO.BusKeep(GPIO AS INTEGER)
     LOCAL x  AS INTEGER = GPIO.Get(GPIO)
@@ -217,7 +217,7 @@ END SUB
   ' -----------------------------------------------------------------
   
   ' Read all GPIO INPUT pins in one shot.
-Function GPIO.PRead()) as INTEGER
+Function GPIO.PRead() as INTEGER
   local x = peek (word __GPIO_SIO_BASE+ &h04)
   if __GPIO_Verbose <>0 then print "GPIO  : Pread  ";bin$(x,32)
   GPIO.PRead = x
@@ -236,14 +236,14 @@ Sub GPIO.Pwrite (State as INTEGER)
   local Safestate as INTEGER = State and &h03FFFFFFF
   poke word x,Safestate
 end sub
-  
-  
+    
   ' Retrieve the current state of the output drivers
 Function GPIO.Pstate() as INTEGER
   local x = peek (word __GPIO_SIO_BASE+ &h010)
   if __GPIO_Verbose <>0 then print "GPIO  : Pstate ";bin$(x,32)
   GPIO.Pstate = x
 end function
+
   ' Shadow sub for Pstate so you can invoke without requiring the return value
   ' only useful when verbose is on
 Sub GPIO.Pstate.
