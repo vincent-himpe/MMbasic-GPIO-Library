@@ -186,17 +186,13 @@ SUB GPIO.NoPull(GPIO AS INTEGER)
   IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Pulls disabled"
 END SUB
   
-  ' Turns on Bus-Keep mode (only on 2350)
+  ' Turns on Bus-Keep mode
   ' This only works if the output driver is disabled and the port is an input
 SUB GPIO.BusKeep(GPIO AS INTEGER)
-  IF __GPIO_Platform = 2040 THEN
-    Error "GPIO : BusKeep needs RP2350x processor"
-  ELSE
     LOCAL x  AS INTEGER = GPIO.Get(GPIO)
     x = x OR  &b00001100
     GPIO.Set GPIO,x
     IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " BusKeep Enabled"
-  END IF
 END SUB
   
   ' Set the driver slewrate to Fast
