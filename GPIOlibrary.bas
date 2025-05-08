@@ -215,7 +215,7 @@ END SUB
 ' Open-Drain, Open-Source mode control
   
   ' Switch a pin to Open-x state (tristated)
-Sub GPIO.Float (GPIO as INTEGER)
+Sub GPIO.FloatP (GPIO as INTEGER)
   GPIO.OEClear(1<<pin)
 end sub
   
@@ -265,7 +265,7 @@ end sub
   
   ' Write all GPIO output drivers in one shot
 Sub GPIO.Pwrite (State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h010)
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h010
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -274,7 +274,7 @@ end sub
   
   ' Retrieve the current state of the output drivers
 Function GPIO.Pstate() as INTEGER
-  local x = peek (word __GPIO_SIO_BASE+ &h010)
+  local x AS INTGER = peek (word __GPIO_SIO_BASE+ &h010)
   if __GPIO_Verbose <>0 then print "GPIO  : Pstate ";bin$(x,32)
   GPIO.Pstate = x
 end function
@@ -282,12 +282,12 @@ end function
   ' Shadow sub for Pstate so you can invoke without requiring the return value
   ' only useful when verbose is on
 Sub GPIO.Pstate.
-  local x = GPIO.Pstate()
+  local x AS INTEGER = GPIO.Pstate()
 end sub
   
   ' Sets the selected bits in the OUTPUT driver. Logical OR
 sub GPIO.PSet(State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h014)
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h014
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -296,7 +296,7 @@ end sub
   
   ' Clear the selected bits in the OUTPUT driver. Logical AND~
 sub GPIO.PClear(State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h018)
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h018
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -305,7 +305,7 @@ end sub
   
   ' XOR the selected bits in the OUTPUT driver
 sub GPIO.PXor(State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h01C)
+  local x AS INTEGER =  __GPIO_SIO_BASE+ &h01C
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -326,7 +326,7 @@ end sub
   
   ' Set the state of the Output Enable on the pads
 Sub GPIO.OEwrite (State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h020)
+  local x AS INTEGER =  __GPIO_SIO_BASE+ &h020
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -335,7 +335,7 @@ end sub
   
   ' Set selected bits in the Output enable of the OUTPUT driver. Logical OR
 sub GPIO.OESet(State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h024)
+  local x AS INTEGER =  __GPIO_SIO_BASE+ &h024
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -344,7 +344,7 @@ end sub
   
   ' Clear bits in the Output Enable of the OUTPUT driver. Logical AND~
 sub GPIO.OEClear(State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h028)
+  local x AS INTEGER =  __GPIO_SIO_BASE+ &h028
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
@@ -353,7 +353,7 @@ end sub
   
   ' XOR bits in the Output Enable of the OUTPUT driver.
 sub GPIO.OEXor(State as INTEGER)
-  local x = (word __GPIO_SIO_BASE+ &h02c)
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h02c
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
