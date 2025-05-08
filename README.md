@@ -73,9 +73,7 @@ Disables both Pull-Up and Pull-Down on GPIO.
 
 ### Sub GPIO.BusKeep (GPIO)
 - GPIO : integer 0 to 29 or more (depending on CPU)  
-Enables a special mode on RP2350 where the pull-up/down resistor keep the current state on a pin. The input floats by default. When you make the input high the Pull-up is enabled. When you float the input again the pull-up keeps the input (weak) high. When you make an input low the pull-down is activated. This works as a kind of state memory. Useful to suppress nois from very high impedant sources.
->[!WARNING]
-> Attempting this on a rp2040 will throw an error
+Enables a special mode where the pull-up/down resistor keep the current state on a pin. The input floats by default. When you make the input high the Pull-up is enabled. When you float the input again the pull-up keeps the input (weak) high. When you make an input low the pull-down is activated. This works as a kind of state memory. Useful to suppress nois from very high impedant sources.
 
 ### Sub GPIO.SlewFast (GPIO)
 - GPIO : integer 0 to 29 or more (depending on CPU)  
