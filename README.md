@@ -93,6 +93,24 @@ Sets the slewrate of the output driver to fast. This can cause ringing on improp
 - GPIO : integer 0 to 29 or more (depending on CPU)  
 Sets the slewrate of the output driver to slow. This reduces ringing and overshoot/undershoot. Useful on I2C busses.  
 
+### Sub GPIO.OpenMode(GPIO,state)  
+- GPIO : integer 0 to 29 or more (depending on CPU)
+- State : 0..3  where
+  - 0 = Open Collector/Source , no pullup
+  - 1 = Open Collector/Source , with pull-up
+  - 2 = Open Emitter/Drain , no pulldown
+  - 3 = Open Emitter/Drain , with pull-down
+
+This is an advanced pin-state that allows open-collector/open-emitter type behavior with or without pull-up/pull-down. You need to use the GPIO.Float and GPIO.Drive functions to set the pin high/low.
+
+## Sub SPIO.Float(GPIO)  
+- GPIO : integer 0 to 29 or more (depending on CPU)
+Turns the pin driver OFF so it floats to its programmed OPEN mode (with or withour resistor)
+
+## Sub SPIO.Drive(GPIO)  
+- GPIO : integer 0 to 29 or more (depending on CPU)
+Turns the pin driver ON so it goes to its programmed DRIVE mode ( HIGH in case of Open emitter/drain, LOW in case of open Collector/Source)
+
 ---
 ## SIO functions  
 These operations allow for PARALLEL ATOMIC operations on the IO pins (PRead = Parallel Read)  
