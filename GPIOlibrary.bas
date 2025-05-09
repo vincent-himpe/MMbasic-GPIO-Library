@@ -296,7 +296,7 @@ Sub GPIO.InMask(mask as integer)
         y = y << 1
     next x    
 end sub
-
+ 
 ' Allow a mask to set the input mode for pins. A bit set to 1 will set the GPIO
 ' to MMBasic Dout mode  
 ' Example : GPIO.Inmask &b01010 wil set GP1 and GP2 to Dout mode
