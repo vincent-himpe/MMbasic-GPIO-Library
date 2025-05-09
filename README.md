@@ -111,6 +111,19 @@ Turns the pin driver OFF so it floats to its programmed OPEN mode (with or witho
 - GPIO : integer 0 to 29 or more (depending on CPU)
 Turns the pin driver ON so it goes to its programmed DRIVE mode ( HIGH in case of Open emitter/drain, LOW in case of open Collector/Source)
 
+### Sub GPIO.INen(GPIO)
+- GPIO : integer 0 to 29 or more (depending on CPU)
+Enables the input sampler so you can read a pin, even if configured as output by MMbasic
+
+### Sub GPIO.DISen(GPIO)
+- GPIO : integer 0 to 29 or more (depending on CPU)
+Disables the input sampler. This masks off any 'return' level that you are drive on the pin.
+
+### Sub GPIO.Sample(GPIO)
+- GPIO : integer 0 to 29 or more (depending on CPU)
+Samples the input buffer directly. (It needs to be enabled using GPIO.INen)
+MMBasics PIN() command does not read from a pin that is configured as output. it returns the state of the output flipflop. If the pin is in tristate and pulled low, MMBasic still returns '1' . The GPIO.Sample command returns the physical pin data.
+ 
 ---
 ## SIO functions  
 These operations allow for PARALLEL ATOMIC operations on the IO pins (PRead = Parallel Read)  
