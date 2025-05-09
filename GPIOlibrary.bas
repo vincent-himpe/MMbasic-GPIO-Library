@@ -211,11 +211,30 @@ SUB GPIO.SlewSlow(GPIO AS INTEGER)
   GPIO.Set GPIO,x
   IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Slewrate SLOW"
 END SUB
+
+' Enable the Input sampler so you can read even if the pin is an output
+SUB GPIO.INen(GPIO AS INTEGER)
+  LOCAL x  AS INTEGER = GPIO.Get(GPIO)
+  x = x or &b01000000
+  GPIO.Set GPIO,x
+  IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Input Cell enabled"
+END SUB
+
+' Disable the Input sampler
+SUB GPIO.INdis(GPIO AS INTEGER)
+  LOCAL x  AS INTEGER = GPIO.Get(GPIO)
+  x = x AND &b10111111
+  GPIO.Set GPIO,x
+  IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Input Cell Disabled"
+END SUB
+
+
+
   
 ' Open-Drain, Open-Source mode control
   
   ' Switch a pin to Open-x state (tristated)
-Sub GPIO.FloatP (GPIO as INTEGER)
+Sub GPIO.Float (GPIO as INTEGER)
   GPIO.OEClear(1<<pin)
 end sub
   
