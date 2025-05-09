@@ -228,7 +228,13 @@ SUB GPIO.INdis(GPIO AS INTEGER)
   IF __GPIO_Verbose<>0 THEN PRINT "GPIO : GP"; GPIO; " Input Cell Disabled"
 END SUB
 
-
+' Read the true input buffer (it needs to be enabled )
+Function GPIO.Sample(Gpio as integer) as integer
+    local x as integer = gpio.pread
+    local y as integer = 0
+    if x and (1<<gpio) >0 then y =1
+    gpio.sample = y  
+end function
 
   
 ' Open-Drain, Open-Source mode control
@@ -270,19 +276,36 @@ end sub
   ' Parallel I/O access. These functions are Atomic and synchronous
   ' -----------------------------------------------------------------
    
-  ' Read all GPIO INPUT pins in one shot.
+   ' need to rework this to auto change based on platform.
+   
+  ' Read all GPIO INPUT pins in one shot. RP2040
 Function GPIO.PRead() as INTEGER
-  local x = peek (word __GPIO_SIO_BASE+ &h04)
-  if __GPIO_Verbose <>0 then print "GPIO  : Pread  ";bin$(x,32)
+  local x as integer = peek (word __GPIO_SIO_BASE+ &h04)
+  if __GPIO_Verbose <>0 then print "GPIO  : Pread  ";bin$(x,29)
   GPIO.PRead = x
 end Function
+  ' Read all GPIO INPUT pins in one shot. RP2350
+Function GPIO.PReadL() as INTEGER
+  local x as integer = peek (word __GPIO_SIO_BASE+ &h08)
+  x = x <<16
+  x = x or peek (word __GPIO_SIO_BASE+ &h04)
+  if __GPIO_Verbose <>0 then print "GPIO  : Pread  ";bin$(x,47)
+  GPIO.PReadLong = x
+end Function
+
   ' Shadow sub for Pread so you can invoke without requiring the return value
   ' only useful when verbose is on
 sub GPIO.Pread.
   local x = GPIO.PRead()
 end sub
+
+sub GPIO.PreadL.
+  local x = GPIO.PReadL()
+end sub
+
   
-  ' Write all GPIO output drivers in one shot
+  ' Write all GPIO 0..29 output drivers in one shot. RP2040
+  ' QSPI / USB Safe
 Sub GPIO.Pwrite (State as INTEGER)
   local x AS INTEGER = __GPIO_SIO_BASE+ &h010
   ' masking off bits that are prohibited to alter
@@ -290,6 +313,20 @@ Sub GPIO.Pwrite (State as INTEGER)
   local Safestate as INTEGER = State and &h03FFFFFFF
   poke word x,Safestate
 end sub
+
+  ' Write all GPIO 0..47 output drivers in one shot. RP2350
+  ' QSPI / USB in danger if not locked by the safe zone
+Sub GPIO.PwriteL (State as INTEGER)
+  
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h010
+  Local Xl as integer = x + &h04
+  if __GPIO_Platform = 2040 then Error "GPIO : PwriteL should only be used on RP2350"
+  local Safestate as INTEGER = State and &h0FFFFFFFF
+  poke word x,Safestate
+  Safestate = (state >>16) or &h0FFFF
+  poke word xl,Safestate
+end sub
+
   
   ' Retrieve the current state of the output drivers
 Function GPIO.Pstate() as INTEGER
@@ -297,21 +334,54 @@ Function GPIO.Pstate() as INTEGER
   if __GPIO_Verbose <>0 then print "GPIO  : Pstate ";bin$(x,32)
   GPIO.Pstate = x
 end function
+
+  ' Retrieve the current state of the output drivers RP2350
+Function GPIO.PstateL() as INTEGER
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h010
+  Local Xl as integer = x + &h04
+  if __GPIO_Platform = 2040 then Error "GPIO : PstateL should only be used on RP2350"
+  Local state as integer = peek (word xl)
+  state = state <<16
+  state = state or peek ( word x)
+  if __GPIO_Verbose <>0 then print "GPIO  : Pstate ";bin$(x,47)
+  GPIO.Pstate = x
+end function
+
   
   ' Shadow sub for Pstate so you can invoke without requiring the return value
   ' only useful when verbose is on
 Sub GPIO.Pstate.
   local x AS INTEGER = GPIO.Pstate()
 end sub
+
+  ' Shadow sub for PstateL so you can invoke without requiring the return value
+  ' only useful when verbose is on
+Sub GPIO.PstateL.
+  local x AS INTEGER = GPIO.PstateL()
+end sub
+
   
   ' Sets the selected bits in the OUTPUT driver. Logical OR
 sub GPIO.PSet(State as INTEGER)
   local x AS INTEGER = __GPIO_SIO_BASE+ &h014
+  if __GPIO_Platform = 2350 then Error "GPIO : Pset should only be used on RP2040. Use PsetL for 2350 "
   ' masking off bits that are prohibited to alter
   ' this depends on cpu architecture
   local Safestate as INTEGER = State and &h03FFFFFFF
   poke word x,Safestate
 end sub
+
+  ' Sets the selected bits in the OUTPUT driver. Logical OR
+sub GPIO.PSetL(State as INTEGER)
+  local x AS INTEGER = __GPIO_SIO_BASE+ &h014
+  if __GPIO_Platform = 2040 then Error "GPIO : PsetL should only be used on RP2350. Use Pset for 2040 "
+  ' masking off bits that are prohibited to alter
+  ' this depends on cpu architecture
+  local Safestate as INTEGER = State and &h03FFFFFFF
+  poke word x,Safestate
+end sub
+
+
   
   ' Clear the selected bits in the OUTPUT driver. Logical AND~
 sub GPIO.PClear(State as INTEGER)
