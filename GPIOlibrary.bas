@@ -235,33 +235,33 @@ END SUB
   
   ' Switch a pin to Open-x state (tristated)
 Sub GPIO.Float (GPIO as INTEGER)
-  GPIO.OEClear(1<<pin)
+  GPIO.OEClear(1<<GPIO)
 end sub
   
   ' Switch a pin into driven state
 sub GPIO.Drive (GPIO as INTEGER)
-  GPIO.OESet(1<<pin)
+  GPIO.OESet(1<<GPIO)
 end sub
   
 Sub GPIO.OpenMode (GPIO as INTEGER,State as INTEGER)
   select case State
     case else
     case 0  ' open collector/source , no pull-up
-      GPIO.OEClear(1<<pin)   ' disable driver
-      GPIO.NoPull(pin)       ' resistors off
-      GPIO.PClear(1 <<pin)   ' set driver to 0
+      GPIO.OEClear(1<<GPIO)   ' disable driver
+      GPIO.NoPull(GPIO)       ' resistors off
+      GPIO.PClear(1 <<GPIO)   ' set driver to 0
     case 1  ' open collector/source , no pull-up
-      GPIO.OEClear(1<<pin)   ' disable driver
-      GPIO.Pullup (pin)      ' resistor in pull-up
-      GPIO.PClear(1 <<pin)   ' set driver to 0
+      GPIO.OEClear(1<<GPIO)   ' disable driver
+      GPIO.Pullup (GPIO)      ' resistor in pull-up
+      GPIO.PClear(1 <<GPIO)   ' set driver to 0
     case 2  ' open Emitter/Drain, no pull-down
-      GPIO.OEClear(1<<pin)   ' disable driver
-      GPIO.NoPull(pin)       ' resistors off
-      GPIO.PSet(1 <<pin)     ' set driver to 1
+      GPIO.OEClear(1<<GPIO)   ' disable driver
+      GPIO.NoPull(GPIO)       ' resistors off
+      GPIO.PSet(1 <<GPIO)     ' set driver to 1
     case 3  ' open Emitter/Drain, pull-down
-      GPIO.OEClear(1<<pin)   ' disable driver
-      GPIO.PullDown(pin)     ' resistors in pulldown
-      GPIO.PClear(1 <<pin)     ' set driver to 0
+      GPIO.OEClear(1<<GPIO)   ' disable driver
+      GPIO.PullDown(GPIO)     ' resistors in pulldown
+      GPIO.PClear(1 <<GPIO)     ' set driver to 0
       error "GPIO : Invalid Mode state"
   end select
 end sub
