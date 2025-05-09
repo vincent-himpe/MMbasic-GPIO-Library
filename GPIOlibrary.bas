@@ -1,7 +1,9 @@
   ' ---------------------------------------------------------
-  ' GPIO low level access library v1.0
+  ' GPIO low level access library v1.0 RC2
   ' Written by Vincent Himpe
   ' Creative Commons Zero Universal
+  ' RC2 adds GPIO.Inmask and GPIO.Outmask
+  
   GPIO.Verbose 1
   GPIO.Startup  ' This must be called at startup
 END           ' remove this when including in code
@@ -18,7 +20,7 @@ SUB GPIO.Startup
   if __GPIO_Verbose>0 then
     print" -----------------------------------------"
     print" GPIO Driver for MMBasic by Vincent Himpe"
-    print" Version 1.0"
+    print" Version 1.0 RC2"
     print" released under Creative Commons Zero Universal"
     print ""
   end if
@@ -278,7 +280,40 @@ end sub
    
    ' need to rework this to auto change based on platform.
    
-  ' Read all GPIO INPUT pins in one shot. RP2040
+  
+' Allow a mask to set the input mode for pins. a bit set to 1 will set the GPIO
+' to MMBasic DIN mode .
+' Example : GPIO.Inmask &b0101 wil set GP0 and GP2 to DIN mode 
+Sub GPIO.InMask(mask as integer)
+    local x as integer
+    local y as integer = 1
+    local command as string
+    for x = 0 to 27
+        if (mask and y) >0 then
+           command = "SETPIN GP"+str$(x)+",Din"
+           execute command
+        end if   
+        y = y << 1
+    next x    
+end sub
+
+' Allow a mask to set the input mode for pins. A bit set to 1 will set the GPIO
+' to MMBasic Dout mode  
+' Example : GPIO.Inmask &b01010 wil set GP1 and GP2 to Dout mode
+Sub GPIO.Outmask(mask as integer)  
+    local x as integer
+    local y as integer = 1
+    local command as string
+    for x = 0 to 27
+        if (mask and y) >0 then
+           command = "SETPIN GP"+str$(x)+",Dout"
+           execute command
+        end if   
+        y = y << 1
+    next x    
+end sub
+
+' Read all GPIO INPUT pins in one shot. RP2040
 Function GPIO.PRead() as INTEGER
   local x as integer = peek (word __GPIO_SIO_BASE+ &h04)
   if __GPIO_Verbose <>0 then print "GPIO  : Pread  ";bin$(x,29)
