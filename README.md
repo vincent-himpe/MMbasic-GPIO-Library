@@ -29,6 +29,11 @@ GPIO.Verbose 0  ' Turn off verbose mode
 GPIO.Verbose 1  ' Turn on verbose mode  
 
 ---
+## RC2
+- adds GPIO.InMode
+- adds GPIO.OutMode
+
+---
 ## PAD Functions.  
 
 The PAD in an RP2xxx is the final stage before a signal leaves the chip, or the first stage when it enters the chip. It connects the physical pin to the internal circuitry.
@@ -192,9 +197,15 @@ This clears the given bits in the OUTPUT ENABLE register. Each corresponding bit
 ### Sub GPIO.OEXor(State)    
 This toggles the given bits in the OUTPUT ENABLE register. Each corresponding bit in STATE is toggled from the current state. This is the equivalent of an XOR operation. This is an ATOMIC HARDWARE operation performed by the processor and not a read-modify-write.  
 
+### Sub GPIO.InMode(mask)  
+Allow a mask to set the input mode for pins. A bit set to 1 in the mask will set the GPIO to MMBasic DIN mode   
+Example : GPIO.InMode &b0101  
+will set GP0 and GP2 to DIN mode 
 
-
- 
+### Sub GPIO.OutMode(mask)  
+Allow a mask to set the input mode for pins. A bit set to 1 in the mask will set the GPIO to MMBasic DOUT mode   
+Example : GPIO.OutMode &b01010  
+will set GP1 and GP3 to DIN mode 
 
  
 
